@@ -8,17 +8,34 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Random;
 
 @RunWith(Parameterized.class)
 public class TestHeapSort<T> {
+    private Sort<T> sort;
+    private T[] input;
+    private Comparator<T> comparator;
+
+    public TestHeapSort(Sort<T> sort, T[] input, Comparator<T> comparator) {
+        this.sort = sort;
+        this.input = input;
+        this.comparator = comparator;
+    }
+
     private static final HeapSort HEAP_SORT = new HeapSort();
-    private static final Comparator<Double> DOUBLE_COMPARATOR = new Comparator<Double>() {
+
+    private static final Comparator<Double> DOUBLE_COMPARATOR1 = new Comparator<Double>() {
         public int compare(final Double value1, final Double value2) {
             return value1.compareTo(value2);
         }
     };
+    private static final Comparator<Double> DOUBLE_COMPARATOR2 = new Comparator<Double>() {
+        public int compare(final Double value1, final Double value2) {
+            return value2.compareTo(value1);
+        }
+    };
     private static final Comparator<Person> PERSON_NAME_COMPARATOR = new Comparator<Person>() {
-        public int compare(Person name1, Person name2) {
+        public int compare(final Person name1, final Person name2) {
             return (name1.getName()).compareTo(name2.getName());
         }
     };
@@ -28,32 +45,43 @@ public class TestHeapSort<T> {
         }
     };
 
-    private static final Object[][] TEST_DATA = {
-            {HEAP_SORT, new Double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, DOUBLE_COMPARATOR},
-            {HEAP_SORT, new Double[]{12.02, 83.09, 7182.93, 78.09}, DOUBLE_COMPARATOR},
-            {HEAP_SORT, new Double[]{10.05, 9.05, 8.05}, DOUBLE_COMPARATOR},
+    private static final Object[][] TEST_DATA = new Object[][]{
+            {HEAP_SORT, randomDoubleArray(5), DOUBLE_COMPARATOR1},
+            {HEAP_SORT, randomDoubleArray(13), DOUBLE_COMPARATOR1},
+            {HEAP_SORT, new Double[]{}, DOUBLE_COMPARATOR1},
+            {HEAP_SORT, new Double[]{1.0, 1.0, 1.0, 1.0}, DOUBLE_COMPARATOR1},
+            {HEAP_SORT, randomDoubleArray(10), DOUBLE_COMPARATOR2},
+            {HEAP_SORT, randomDoubleArray(8), DOUBLE_COMPARATOR2},
+            {HEAP_SORT, new Double[]{1.0, 1.0, 2.0, 3.0, 5.0}, DOUBLE_COMPARATOR2},
+            {HEAP_SORT, new Double[]{6.0, 3.0, 2.0, 2.0, 1.0}, DOUBLE_COMPARATOR2},
             {HEAP_SORT, new Person[]
-                    {new Person("Alina", 20), new Person("Veronika", 19)}, PERSON_NAME_COMPARATOR},
+                    {new Person("Alina", 20), new Person("Alina", 19)}, PERSON_NAME_COMPARATOR},
             {HEAP_SORT, new Person[]
-                    {new Person("A", 2), new Person("B", 3), new Person("C", 5)}, PERSON_AGE_COMPARATOR},
+                    {new Person("A", 20), new Person("B", 19), new Person("C", 0), new Person("D", 0)}, PERSON_NAME_COMPARATOR},
             {HEAP_SORT, new Person[]
-                    {new Person("P", 10), new Person("O", 10), new Person("N", 10), new Person("M", 10)}, PERSON_NAME_COMPARATOR}
+                    {new Person("Merlin", 20), new Person("Genry", 19), new Person("Artur", 19), new Person("Emma", 19)}, PERSON_NAME_COMPARATOR},
+            {HEAP_SORT, new Person[]{}, PERSON_NAME_COMPARATOR},
+            {HEAP_SORT, new Person[]{}, PERSON_AGE_COMPARATOR},
+            {HEAP_SORT, new Person[]
+                    {new Person("P", 10), new Person("O", 10), new Person("N", 10), new Person("M", 10)}, PERSON_AGE_COMPARATOR},
+            {HEAP_SORT, new Person[]
+                    {new Person("Frodo", 10), new Person("Sauron", 9), new Person("Nice", 7), new Person("Mac", 6)}, PERSON_AGE_COMPARATOR},
+            {HEAP_SORT, new Person[]
+                    {new Person("Harry", 15), new Person("Ron", 9), new Person("Draco", 17), new Person("Rimus", 46)}, PERSON_AGE_COMPARATOR}
     };
 
+    private static Double[] randomDoubleArray(final int size) {
+        Random rand = new Random();
+        Double[] array = new Double[size];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rand.nextDouble();
+        }
+        return array;
+    }
 
     @Parameterized.Parameters
     public static Collection<Object[]> testData() {
         return Arrays.asList(TEST_DATA);
-    }
-
-    private Sort<T> sort;
-    private T[] input;
-    private Comparator<T> comparator;
-
-    public TestHeapSort(Sort<T> sort, T[] input, Comparator<T> comparator) {
-        this.sort = sort;
-        this.input = input;
-        this.comparator = comparator;
     }
 
     @Test
@@ -75,12 +103,15 @@ public class TestHeapSort<T> {
 
     private boolean hasEachElementOf(T[] input, T[] result, Comparator<T> comparator) {
         for (T element : input) {
+            int count = 0;
             for (int j = 0; j < result.length; j++) {
-                if (result[j] == element)
-                    break;
-                if (j == result.length - 1)
-                    return false;
+                if (comparator.compare(result[j], element) == 0)
+                    count++;
+                if (comparator.compare(input[j], element) == 0)
+                    count--;
             }
+            if (count != 0)
+                return false;
         }
         return true;
     }
