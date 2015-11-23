@@ -18,7 +18,7 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         } else {
-            System.out.print("error: false arguments");
+            System.out.print("error: wrong arguments");
         }
     }
 }

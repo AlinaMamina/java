@@ -9,20 +9,20 @@ public class Processing {
         if (!checkSyntax(str))
             throw new Exception("Syntax error!");
         if (!countBracket(str))
-            throw new Exception("Count Bracket!");
+            throw new Exception("Wrong count bracket!");
         int lenStr = str.length();
         int pos;
         //'+'
-        if ((pos = findPos(str, '+')) != -1)
+        if ((pos = findPosNotInBracket(str, '+')) != -1)
             return new ExpTree(processStr(str.substring(0, pos)), processStr(str.substring(pos + 1)), '+');
         // '-'
-        if ((pos = findPos(str, '-')) != -1)
+        if ((pos = findPosNotInBracket(str, '-')) != -1)
             return new ExpTree(processStr(str.substring(0, pos)), processStr(str.substring(pos + 1)), '-');
         //'*'
-        if ((pos = findPos(str, '*')) != -1)
+        if ((pos = findPosNotInBracket(str, '*')) != -1)
             return new ExpTree(processStr(str.substring(0, pos)), processStr(str.substring(pos + 1)), '*');
         // '/'
-        if ((pos = findPos(str, '/')) != -1)
+        if ((pos = findPosNotInBracket(str, '/')) != -1)
             return new ExpTree(processStr(str.substring(0, pos)), processStr(str.substring(pos + 1)), '/');
         // '(' ')'
         if (str.charAt(0) == '(')
@@ -35,17 +35,16 @@ public class Processing {
                 c++;
             if (str.charAt(i) == ')')
                 c--;
-            //character what is it???
             if (Character.isDigit(str.charAt(i)) && c == 0) {
                 return new Const(Double.valueOf(str));
             }
         }
-        if (findPos(str, 'x') != -1)
+        if (findPosNotInBracket(str, 'x') != -1)
             return new Var();
         throw new Exception("Syntax error!");
     }
 
-    private int findPos(String str, char sym) {
+    private int findPosNotInBracket(String str, char sym) {
         int c = 0;
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == '(')
@@ -60,16 +59,17 @@ public class Processing {
     }
 
     private boolean checkSyntax(String str) {
-        char rightSym[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '+', '-', '*', '/', '(', ')', 'x'};
-        boolean flag = false;
+        char rightSym[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '+', '-', '*', '/', '(', ')', 'x', '.'};
+        int k = 0;
         for (int i = 0; i < str.length(); i++) {
             for (int j = 0; j < rightSym.length; j++) {
-                if (str.charAt(i) == rightSym[j]) {
-                    flag = true;
+                if (str.charAt(i) != rightSym[j]) {
+                    k++;
                 }
             }
-            if (flag == false)
+            if (k == rightSym.length)
                 return false;
+            k = 0;
         }
         return true;
     }

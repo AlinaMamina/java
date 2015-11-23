@@ -25,7 +25,7 @@ public class ExpTree implements Expression {
                 if (res_right != 0)
                     return (res_left / res_right);
                 else
-                    throw new Exception("math error");
+                    throw new Exception("Calculation error!");
             default:
                 return 0;
         }
