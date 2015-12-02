@@ -17,8 +17,17 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        } else {
-            System.out.print("error: wrong arguments");
+        }else if (args.length == 3) {
+                final DataInFile file = new DataInFile();
+                try {
+                    file.processFile(args[0], args[1], args[2]);
+                }catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
         }
+            else {
+            System.out.println("error: wrong arguments");
+            }
     }
 }
+

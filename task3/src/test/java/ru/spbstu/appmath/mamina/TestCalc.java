@@ -24,7 +24,7 @@ public class TestCalc {
         this.answer = answer;
         this.error = error;
     }
-
+//добавить тесты с чтением из файла
     private static final Object[][] TEST_DATA = new Object[][]{
             {"x", 0.0, 0.0, ""},
             {"1+x*x ", 2.0, 5.0, ""},
@@ -60,7 +60,7 @@ public class TestCalc {
     }
 
     private boolean checkException(String exception) {
-        System.out.print(exception);
+        System.out.println(exception);
         if (!exception.equals(error))
             return false;
         else return true;

@@ -11,6 +11,7 @@ public class Processing {
         if (!countBracket(str))
             throw new Exception("Wrong count bracket!");
         int lenStr = str.length();
+        str.replace(" ","");
         int pos;
         //'+'
         if ((pos = findPosNotInBracket(str, '+')) != -1)
