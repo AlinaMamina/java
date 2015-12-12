@@ -5,11 +5,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import ru.sbpstu.appmath.mamina.DataInFile;
 import ru.sbpstu.appmath.mamina.Expression;
 import ru.sbpstu.appmath.mamina.Processing;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Scanner;
 
 @RunWith(Parameterized.class)
 public class TestCalc {
@@ -24,13 +29,14 @@ public class TestCalc {
         this.answer = answer;
         this.error = error;
     }
-//добавить тесты с чтением из файла
+
+
     private static final Object[][] TEST_DATA = new Object[][]{
             {"x", 0.0, 0.0, ""},
             {"1+x*x ", 2.0, 5.0, ""},
             {"x+(x-3)*5", 1.0, -9.0, ""},
             {"1/x - x +1.23 ", 2.0, -0.27, ""},
-            {"19nan", 2.0, 302.14, "Syntax error!"},
+            {"19nan", 2.0, 302.14, "Wrong symbol!"},
             {"1 +1/0", 0.0, 0.0, "Calculation error!"},
             {"((2+2)", 0.0, 0.0, "Wrong count bracket!"}
     };
@@ -39,6 +45,7 @@ public class TestCalc {
     public static Collection<Object[]> testData() {
         return Arrays.asList(TEST_DATA);
     }
+
 
     @Test
     public void test() {

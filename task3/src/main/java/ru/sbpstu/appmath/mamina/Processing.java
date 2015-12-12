@@ -1,17 +1,21 @@
 package ru.sbpstu.appmath.mamina;
 
 
+import ru.sbpstu.appmath.mamina.MyException.BracketException;
+import ru.sbpstu.appmath.mamina.MyException.SymbolException;
+import ru.sbpstu.appmath.mamina.MyException.SyntaxException;
+
 public class Processing {
     public Expression processStr(String str) throws Exception {
 
         if (str.equals(""))
-            throw new Exception("Syntax error!");
+            throw new SyntaxException();
         if (!checkSyntax(str))
-            throw new Exception("Syntax error!");
+            throw new SymbolException();
         if (!countBracket(str))
-            throw new Exception("Wrong count bracket!");
+            throw new BracketException();
         int lenStr = str.length();
-        str.replace(" ","");
+        str.replace(" ", "");
         int pos;
         //'+'
         if ((pos = findPosNotInBracket(str, '+')) != -1)
@@ -42,7 +46,7 @@ public class Processing {
         }
         if (findPosNotInBracket(str, 'x') != -1)
             return new Var();
-        throw new Exception("Syntax error!");
+        throw new SyntaxException();
     }
 
     private int findPosNotInBracket(String str, char sym) {

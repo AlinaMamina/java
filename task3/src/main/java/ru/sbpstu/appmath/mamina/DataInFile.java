@@ -1,5 +1,6 @@
 package ru.sbpstu.appmath.mamina;
 
+import ru.sbpstu.appmath.mamina.MyException.ColonException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,11 +13,16 @@ public class DataInFile {
     public void processFile(String in_name, String out_name, String interval) throws Exception {
         final File in_file = new File(in_name);
         final File out_file = new File(out_name);
-
+        if (!in_file.exists()) {
+            throw new Exception("File not found");
+        }
+        if (!out_file.exists()) {
+            out_file.createNewFile();
+        }
         int posColon1 = interval.indexOf(':');
         int posColon2 = interval.lastIndexOf(':');
         if (posColon1 == -1 || posColon2 == -1)
-            throw new Exception("Wrong syntax");
+            throw new ColonException();
         final int min = Integer.valueOf(interval.substring(0, posColon1));
         final int max;
         final int step;
@@ -65,7 +71,7 @@ public class DataInFile {
             }
             return tasks;
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            System.out.println(e.getMessage());
         }
         return null;
 
@@ -75,12 +81,12 @@ public class DataInFile {
         try (PrintWriter writer = new PrintWriter(file)) {
             for (int i = 0; i < result.length; i++) {
                 for (int j = 0; j < result[0].length; j++) {
-                    writer.print(result[i][j] + "    ");
+                    writer.print(result[i][j] + "       ");
                 }
                 writer.println();
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not found");
+            System.out.println(e.getMessage());
         }
 
     }

@@ -1,5 +1,7 @@
 package ru.sbpstu.appmath.mamina;
 
+import ru.sbpstu.appmath.mamina.MyException.CalculationException;
+
 public class ExpTree implements Expression {
     private final Expression left;
     private final Expression right;
@@ -25,7 +27,7 @@ public class ExpTree implements Expression {
                 if (res_right != 0)
                     return (res_left / res_right);
                 else
-                    throw new Exception("Calculation error!");
+                    throw new CalculationException();
             default:
                 return 0;
         }
