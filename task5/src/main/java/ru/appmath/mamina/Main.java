@@ -5,15 +5,6 @@ import java.io.PrintWriter;
 
 public class Main {
 
-    public static void printInFile(File outFile, Matrix res) throws Exception {
-        PrintWriter printWriter = new PrintWriter(outFile);
-        for (int i = 0; i < res.getColumns(); i++) {
-            for (int j = 0; j < res.getLine(); j++)
-                printWriter.print(res.getElement(i, j) + " ");
-            printWriter.println();
-        }
-        printWriter.close();
-    }
 
     public static void main(String[] args) {
         try {
@@ -27,14 +18,14 @@ public class Main {
             }
             File file1 = new File(args[0]);
             File file2 = new File(args[1]);
-            File out_file = new File(args[2]);
-            Matrix m1 = new Matrix(file1);
-            Matrix m2 = new Matrix(file2);
-            int count_thread = 1;
+            File outFile = new File(args[2]);
+            Matrix m1 = OperationWithFile.readMatrix(file1);
+            Matrix m2 = OperationWithFile.readMatrix(file2);
+            int countThread = 1;
             if (args.length == 4)
-                count_thread = Integer.valueOf(args[3]);
-            Matrix result = new MultiplyMatrix(m1, m2, count_thread).multiply();
-            printInFile(out_file, result);
+                countThread = Integer.valueOf(args[3]);
+            Matrix result = new MatrixMultiplication(m1, m2, countThread).multiply();
+            OperationWithFile.printInFile(outFile, result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

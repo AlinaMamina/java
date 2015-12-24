@@ -1,6 +1,10 @@
 package ru.appmath.mamina;
 
+import ru.appmath.mamina.exception.MatrixCalcException;
+import ru.appmath.mamina.exception.SizeException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
@@ -16,32 +20,35 @@ public class Time {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws FileNotFoundException, SizeException {
         try {
             measureTime(10, 15, new File("src/res1.txt"));
             measureTime(100, 150, new File("src/res2.txt"));
             measureTime(400, 500, new File("src/res3.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private static void measureTime(int rows, int columns, File file) throws IOException {
-        int threads = 1;
+    private static void measureTime(int rows, int columns, File file) throws SizeException, FileNotFoundException {
+        int threads;
 
         Matrix m1 = new Matrix(rows, columns);
         createRandom(m1);
         Matrix m2 = new Matrix(columns, rows);
         createRandom(m2);
 
-
         PrintWriter printWriter = new PrintWriter(file);
-        for (threads = 1; threads <= 1000; threads *= 10) {
-            MultiplyMatrix multiplyMatrix = new MultiplyMatrix(m1, m2, threads);
-            long beginTime = System.currentTimeMillis();
-            multiplyMatrix.multiply();
-            long endTime = System.currentTimeMillis() - beginTime;
-            printWriter.println(threads + "\t" + endTime);
+        for (threads = 1; threads <= 500; threads += 50) {
+            MatrixMultiplication MatrixMultiplication = new MatrixMultiplication(m1, m2, threads);
+            long allTime = 0;
+            for (int j = 0; j < 5; j++) {
+                long beginTime = System.currentTimeMillis();
+                MatrixMultiplication.multiply();
+                long endTime = System.currentTimeMillis() - beginTime;
+                allTime += endTime;
+            }
+            printWriter.println(threads + "\t" + allTime / 5);
         }
         printWriter.close();
     }

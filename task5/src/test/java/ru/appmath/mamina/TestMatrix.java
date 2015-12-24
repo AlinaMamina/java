@@ -4,31 +4,32 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import ru.appmath.mamina.exception.SizeException;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class TestMatrix {
-    private Matrix m1;
-    private Matrix m2;
-    private Matrix res;
-    private int count_thread;
+    private final Matrix m1;
+    private final Matrix m2;
+    private final Matrix res;
+    private final int countThread;
 
 
     private final static Object[][] TEST = new Object[][]{
-            {new Double[][]{{0.0}}, new Double[][]{{0.0}}, new Double[][]{{0.0}}, 1},
-            {new Double[][]{{1.0, 1.0}, {2.0 ,2.0}}, new Double[][]{{2.0, 2.0}, {1.0, 1.0}}, new Double[][]{{3.0, 3.0}, {6.0, 6.0}}, 1},
-            {new Double[][]{{1.0, 1.0}, {2.0, 2.0}}, new Double[][]{{2.0, 2.0}, {1.0, 1.0}}, new Double[][]{{3.0, 3.0}, {6.0, 6.0}}, 2},
-            {new Double[][]{{1.0, 1.0,1.0}, {2.0, 2.0, 2.0}}, new Double[][]{{2.0, 2.0}, {1.0, 1.0},{3.0,3.0}}, new Double[][]{{6.0, 6.0}, {12.0, 12.0}}, 2},
-            {new Double[][]{{1.0, 1.0,1.0}, {2.0, 2.0,2.0}}, new Double[][]{{2.0, 2.0}, {1.0, 1.0},{3.0,3.0}}, new Double[][]{{6.0, 6.0}, {12.0, 12.0}}, 3}
+            {new double[][]{{0.0}}, new double[][]{{0.0}}, new double[][]{{0.0}}, 1},
+            {new double[][]{{1.0, 1.0}, {2.0 ,2.0}}, new double[][]{{2.0, 2.0}, {1.0, 1.0}}, new double[][]{{3.0, 3.0}, {6.0, 6.0}}, 1},
+            {new double[][]{{1.0, 1.0}, {2.0, 2.0}}, new double[][]{{2.0, 2.0}, {1.0, 1.0}}, new double[][]{{3.0, 3.0}, {6.0, 6.0}}, 2},
+            {new double[][]{{1.0, 1.0,1.0}, {2.0, 2.0, 2.0}}, new double[][]{{2.0, 2.0}, {1.0, 1.0},{3.0,3.0}}, new double[][]{{6.0, 6.0}, {12.0, 12.0}}, 2},
+            {new double[][]{{1.0, 1.0,1.0}, {2.0, 2.0,2.0}}, new double[][]{{2.0, 2.0}, {1.0, 1.0},{3.0,3.0}}, new double[][]{{6.0, 6.0}, {12.0, 12.0}}, 3}
     };
 
-    public TestMatrix(Double[][] m1, Double[][] m2, Double[][] res, Integer count_thread) {
+    public TestMatrix(double[][] m1,double[][] m2, double[][] res, int countThread) {
         this.m1 = new Matrix(m1);
         this.m2 = new Matrix(m2);
         this.res = new Matrix(res);
-        this.count_thread = count_thread;
+        this.countThread = countThread;
     }
 
     @Parameterized.Parameters
@@ -39,10 +40,10 @@ public class TestMatrix {
     @Test
     public void test() {
         try {
-            Matrix result = new MultiplyMatrix(m1, m2, count_thread).multiply();
+            Matrix result = new MatrixMultiplication(m1, m2, countThread).multiply();
             Assert.assertTrue(compare(res, result));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SizeException e) {
+            System.out.println(e.getMessage());
         }
     }
 

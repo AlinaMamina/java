@@ -1,6 +1,6 @@
 package ru.appmath.mamina;
 
-import java.io.IOException;
+import ru.appmath.mamina.exception.SizeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -8,16 +8,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MultiplyMatrix {
-    private Matrix m1;
-    private Matrix m2;
-    private int count_thread;
+public class MatrixMultiplication {
+    private final Matrix m1;
+    private final Matrix m2;
+    private final int countThread;
 
-
-    public MultiplyMatrix(Matrix m1, Matrix m2, int count_thread) {
+    public MatrixMultiplication(Matrix m1, Matrix m2, int countThread) {
         this.m1 = m1;
         this.m2 = m2;
-        this.count_thread = count_thread;
+        this.countThread = countThread;
     }
 
     private class Task implements Callable<Double> {
@@ -38,13 +37,13 @@ public class MultiplyMatrix {
     }
 
 
-    public Matrix multiply() throws IOException {
+    public Matrix multiply() throws SizeException {
         if (m1.getLine() != m2.getColumns())
-            throw new IOException("Error");
+            throw new SizeException();
 
         Matrix result = new Matrix(m1.getLine(), m2.getColumns());
         final List<Result> task = new ArrayList<Result>();
-        ExecutorService service = Executors.newFixedThreadPool(count_thread);
+        ExecutorService service = Executors.newFixedThreadPool(countThread);
 
         for (int i = 0; i < m1.getLine(); i++)
             for (int j = 0; j < m2.getColumns(); ++j) {
