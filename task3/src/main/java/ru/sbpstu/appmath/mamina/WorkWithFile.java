@@ -16,6 +16,9 @@ public class WorkWithFile {
     public void parseFile(final String in_name, final String out_name, final Double min, final Double max, final Double step) throws ExpException {
         final File inFile = new File(in_name);
         final File outFile = new File(out_name);
+        if(!inFile.exists() || !outFile.exists()){
+            throw new ExpException("File not found!");
+        }
         final List<String> tasks = readFile(inFile);
         final Double d = (max - min) / step + 1;
         final Integer s = d.intValue();

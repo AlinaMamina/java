@@ -2,12 +2,11 @@ package ru.sbpstu.appmath.mamina.calculator;
 
 
 import ru.sbpstu.appmath.mamina.exception.BracketException;
-import ru.sbpstu.appmath.mamina.exception.ExpException;
 import ru.sbpstu.appmath.mamina.exception.SymbolException;
 import ru.sbpstu.appmath.mamina.exception.SyntaxException;
 
 public class Parser {
-    public Expression parseStr(String s) throws ExpException {
+    public Expression parseStr(String s) throws SyntaxException {
 
         String str = s.replace(" ", "");
         if (str.equals(""))
@@ -21,16 +20,16 @@ public class Parser {
         int pos;
         //'+'
         if ((pos = findPosNotInBracket(str, '+')) != -1)
-            return new Calculator(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '+');
+            return new BinOperation(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '+');
         // '-'
         if ((pos = findPosNotInBracket(str, '-')) != -1)
-            return new Calculator(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '-');
+            return new BinOperation(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '-');
         //'*'
         if ((pos = findPosNotInBracket(str, '*')) != -1)
-            return new Calculator(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '*');
+            return new BinOperation(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '*');
         // '/'
         if ((pos = findPosNotInBracket(str, '/')) != -1)
-            return new Calculator(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '/');
+            return new BinOperation(parseStr(str.substring(0, pos)), parseStr(str.substring(pos + 1)), '/');
         // '(' ')'
         if (str.charAt(0) == '(')
             return parseStr(str.substring(1, lenStr - 1));

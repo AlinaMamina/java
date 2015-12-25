@@ -1,7 +1,7 @@
 package ru.sbpstu.appmath.mamina.calculator;
 
 
-import ru.sbpstu.appmath.mamina.exception.ExpException;
+import ru.sbpstu.appmath.mamina.exception.CalculationException;
 
 public class Const implements Expression {
     private final Double value;
@@ -10,7 +10,7 @@ public class Const implements Expression {
         this.value = value;
     }
 
-    public Double calc(Double x) throws ExpException {
+    public Double calc(Double x) throws CalculationException {
         return this.value;
     }
 }
