@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    public void parseFile(final String in_name, final String out_name, final Double min, final Double max, final Double step) throws ExpException {
+    public void parseFile(final String in_name, final String out_name, final Double min, final Double max, final Double step) throws ExpException, FileNotFoundException {
         final File inFile = new File(in_name);
         final File outFile = new File(out_name);
         if(!inFile.exists() || !outFile.exists()){
@@ -43,25 +43,22 @@ public class WorkWithFile {
 
     }
 
-    private static List<String> readFile(File file) {
+    private static List<String> readFile(File file) throws FileNotFoundException {
         List<String> tasks = new ArrayList<>();
         int i = 0;
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        try(Scanner scanner = new Scanner(file)) {
+
+            while (scanner.hasNextLine()) {
+                tasks.add(i, scanner.nextLine());
+                i++;
+            }
+            scanner.close();
+            return tasks;
         }
-        while (scanner.hasNextLine()) {
-            tasks.add(i, scanner.nextLine());
-            i++;
-        }
-        scanner.close();
-        return tasks;
     }
 
 
-    private static void write(File file, Object[][] result) {
+    private static void write(File file, Object[][] result) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(file)) {
             int len[] = maxWidthColumn(result);
             for (int i = 0; i < result.length; i++) {
@@ -77,8 +74,6 @@ public class WorkWithFile {
                 }
                 writer.println();
             }
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
         }
     }
 

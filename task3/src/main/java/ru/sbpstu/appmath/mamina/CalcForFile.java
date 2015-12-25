@@ -2,8 +2,10 @@ package ru.sbpstu.appmath.mamina;
 
 import ru.sbpstu.appmath.mamina.exception.ExpException;
 
+import java.io.FileNotFoundException;
+
 public class CalcForFile {
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException {
         if (args.length == 3) {
             final WorkWithFile file = new WorkWithFile();
             try {
