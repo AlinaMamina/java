@@ -11,39 +11,42 @@ import java.util.Scanner;
 
 public class OperationWithFile {
     public static void printInFile(File outFile, Matrix res) throws Exception {
-        PrintWriter printWriter = new PrintWriter(outFile);
-        for (int i = 0; i < res.getColumns(); i++) {
-            for (int j = 0; j < res.getLine(); j++)
-                printWriter.print(res.getElement(i, j) + " ");
-            printWriter.println();
+        try (PrintWriter printWriter = new PrintWriter(outFile)) {
+            for (int i = 0; i < res.getColumns(); i++) {
+                for (int j = 0; j < res.getLine(); j++)
+                    printWriter.print(res.getElement(i, j) + " ");
+                printWriter.println();
+            }
+            printWriter.close();
         }
-        printWriter.close();
     }
 
     public static Matrix readMatrix(File file) throws MatrixCalcException, FileNotFoundException {
         int countColumns = 0;
         int countLines = 0;
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine()) {
-            String[] line = scanner.nextLine().split(" ");
-            if (countColumns == 0)
-                countColumns = line.length;
-            if (countColumns != line.length) {
-                scanner.close();
-                throw new SizeException();
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(" ");
+                if (countColumns == 0)
+                    countColumns = line.length;
+                if (countColumns != line.length) {
+                    scanner.close();
+                    throw new SizeException();
+                }
+                countLines++;
             }
-            countLines++;
-        }
-        scanner.close();
 
-        Matrix m = new Matrix(countLines, countColumns);
-        scanner = new Scanner(file.getAbsoluteFile());
-        for (int i = 0; i < countLines; i++) {
-            for (int j = 0; j < countColumns; j++) {
-                m.set(i, j, scanner.nextDouble());
-            }
+            scanner.close();
         }
-        scanner.close();
-        return m;
+        Matrix m = new Matrix(countLines, countColumns);
+        try (Scanner scanner1 = new Scanner(file.getAbsoluteFile())) {
+            for (int i = 0; i < countLines; i++) {
+                for (int j = 0; j < countColumns; j++) {
+                    m.set(i, j, scanner1.nextDouble());
+                }
+            }
+            scanner1.close();
+            return m;
+        }
     }
 }

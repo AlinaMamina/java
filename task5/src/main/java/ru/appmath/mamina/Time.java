@@ -38,19 +38,20 @@ public class Time {
         Matrix m2 = new Matrix(columns, rows);
         createRandom(m2);
 
-        PrintWriter printWriter = new PrintWriter(file);
-        for (threads = 1; threads <= 500; threads += 50) {
-            MatrixMultiplication MatrixMultiplication = new MatrixMultiplication(m1, m2, threads);
-            long allTime = 0;
-            for (int j = 0; j < 5; j++) {
-                long beginTime = System.currentTimeMillis();
-                MatrixMultiplication.multiply();
-                long endTime = System.currentTimeMillis() - beginTime;
-                allTime += endTime;
+        try (PrintWriter printWriter = new PrintWriter(file)) {
+            for (threads = 1; threads <= 500; threads += 50) {
+                MatrixMultiplication MatrixMultiplication = new MatrixMultiplication(m1, m2, threads);
+                long allTime = 0;
+                for (int j = 0; j < 5; j++) {
+                    long beginTime = System.currentTimeMillis();
+                    MatrixMultiplication.multiply();
+                    long endTime = System.currentTimeMillis() - beginTime;
+                    allTime += endTime;
+                }
+                printWriter.println(threads + "\t" + allTime / 5);
             }
-            printWriter.println(threads + "\t" + allTime / 5);
+            printWriter.close();
         }
-        printWriter.close();
     }
 }
 
